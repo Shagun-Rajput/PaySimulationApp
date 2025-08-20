@@ -1,10 +1,12 @@
 package com.qbtechlabs.loadbalancer.strategy;
 
 import com.qbtechlabs.loadbalancer.domain.Server;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Random;
 
+@Service
 public final class RandomStrategy implements CommonLoadBalancingStrategy {
 
     private final Random random = new Random();
