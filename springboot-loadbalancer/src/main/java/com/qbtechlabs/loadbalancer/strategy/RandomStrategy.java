@@ -1,11 +1,11 @@
-package com.example.loadbalancer.strategy;
+package com.qbtechlabs.loadbalancer.strategy;
 
-import com.example.loadbalancer.domain.Server;
+import com.qbtechlabs.loadbalancer.domain.Server;
 
 import java.util.List;
 import java.util.Random;
 
-public class RandomStrategy implements LoadBalancingStrategy {
+public final class RandomStrategy implements CommonLoadBalancingStrategy {
 
     private final Random random = new Random();
 

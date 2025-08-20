@@ -1,17 +1,17 @@
-package com.example.loadbalancer.controller;
+package com.qbtechlabs.loadbalancer.controller;
 
-import com.example.loadbalancer.service.LoadBalancerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.qbtechlabs.loadbalancer.service.LoadBalancerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class ProxyController {
-
+    /*******************************************************************************************************************
+     *  This controller acts as a proxy for all incoming requests.
+     * It forwards the requests to the appropriate server based on the load balancing strategy.
+     ******************************************************************************************************************/
     private final LoadBalancerService loadBalancerService;
-
-    @Autowired
     public ProxyController(LoadBalancerService loadBalancerService) {
         this.loadBalancerService = loadBalancerService;
     }

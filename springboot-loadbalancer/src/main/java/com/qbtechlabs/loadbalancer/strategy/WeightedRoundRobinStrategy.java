@@ -1,10 +1,12 @@
-package com.example.loadbalancer.strategy;
+package com.qbtechlabs.loadbalancer.strategy;
 
-import com.example.loadbalancer.domain.Server;
+import com.qbtechlabs.loadbalancer.domain.Server;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class WeightedRoundRobinStrategy implements LoadBalancingStrategy {
+@Service
+public final class WeightedRoundRobinStrategy implements CommonLoadBalancingStrategy {
 
     private int currentIndex = -1;
     private int currentWeight = 0;

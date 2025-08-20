@@ -1,10 +1,13 @@
-package com.example.loadbalancer.strategy;
+package com.qbtechlabs.loadbalancer.strategy;
 
-import com.example.loadbalancer.domain.Server;
+
+import com.qbtechlabs.loadbalancer.domain.Server;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class LeastConnectionsStrategy implements LoadBalancingStrategy {
+@Service
+public final class LeastConnectionsStrategy implements CommonLoadBalancingStrategy {
 
     @Override
     public Server selectServer(List<Server> servers) {

@@ -1,0 +1,12 @@
+backendServers:
+  - url: "http://localhost:8081"
+    weight: 1
+  - url: "http://localhost:8082"
+    weight: 2
+  - url: "http://localhost:8083"
+    weight: 1
+
+loadBalancingStrategy: "RoundRobin"  # Options: RoundRobin, Random, WeightedRoundRobin, LeastConnections
+
+healthCheckInterval: 5000  # Interval in milliseconds for health checks
+timeout: 2000  # Timeout in milliseconds for requests to backend servers

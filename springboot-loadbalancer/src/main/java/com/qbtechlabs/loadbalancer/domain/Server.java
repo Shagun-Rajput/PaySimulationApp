@@ -1,4 +1,4 @@
-package com.example.loadbalancer.domain;
+package com.qbtechlabs.loadbalancer.domain;
 
 public class Server {
     private String url;

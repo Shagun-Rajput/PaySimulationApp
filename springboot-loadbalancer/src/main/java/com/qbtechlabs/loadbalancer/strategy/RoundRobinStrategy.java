@@ -1,11 +1,13 @@
-package com.example.loadbalancer.strategy;
+package com.qbtechlabs.loadbalancer.strategy;
 
-import com.example.loadbalancer.domain.Server;
+import com.qbtechlabs.loadbalancer.domain.Server;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class RoundRobinStrategy implements LoadBalancingStrategy {
+@Service
+public final class RoundRobinStrategy implements CommonLoadBalancingStrategy {
 
     private final AtomicInteger index = new AtomicInteger(0);
 

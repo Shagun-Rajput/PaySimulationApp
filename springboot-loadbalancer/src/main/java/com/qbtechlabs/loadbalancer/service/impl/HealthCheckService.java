@@ -1,11 +1,11 @@
-package com.example.loadbalancer.service;
+package com.qbtechlabs.loadbalancer.service.impl;
 
-import com.example.loadbalancer.domain.Server;
+import com.qbtechlabs.loadbalancer.domain.Server;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
@@ -46,4 +46,6 @@ public class HealthCheckService {
             }
         }
     }
+
+
 }

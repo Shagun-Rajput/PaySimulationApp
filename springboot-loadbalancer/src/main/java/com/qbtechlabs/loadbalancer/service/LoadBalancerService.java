@@ -1,29 +1,18 @@
-package com.example.loadbalancer.service;
+package com.qbtechlabs.loadbalancer.service;
 
-import com.example.loadbalancer.domain.Server;
-import com.example.loadbalancer.strategy.LoadBalancingStrategy;
+import com.qbtechlabs.loadbalancer.domain.Server;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
 @Service
-public class LoadBalancerService {
+public interface LoadBalancerService {
+    String forwardRequest(String requestUri, List<Server> servers);
 
-    private final LoadBalancingStrategy loadBalancingStrategy;
-    private final WebClient webClient;
+    String forwardRequest(String requestUri, String body, List<Server> servers);
 
-    public LoadBalancerService(LoadBalancingStrategy loadBalancingStrategy, WebClient.Builder webClientBuilder) {
-        this.loadBalancingStrategy = loadBalancingStrategy;
-        this.webClient = webClientBuilder.build();
-    }
+    ResponseEntity<String> forwardRequest();
 
-    public String forwardRequest(String requestUri, List<Server> servers) {
-        Server selectedServer = loadBalancingStrategy.selectServer(servers);
-        return webClient.get()
-                .uri(selectedServer.getUrl() + requestUri)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
+    ResponseEntity<String> forwardRequest(String body);
 }
