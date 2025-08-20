@@ -49,6 +49,8 @@ public class LoadBalancerServiceImpl implements LoadBalancerService {
     public ResponseEntity<String> forwardRequest(String method, String requestUri, Map<String, String> headers, String body) {
 
         Server selectedServer = strategyFactory.getStrategy().selectServer(servers);
+        // Increment active connections for the selected server
+        selectedServer.setActiveConnections(selectedServer.getActiveConnections() + NumberEnum.ONE.value());
         try {
             return prepareRequest(selectedServer, method, requestUri, headers, body)
                     .retrieve()

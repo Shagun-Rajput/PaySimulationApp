@@ -24,12 +24,9 @@ public final class LeastConnectionsStrategy implements CommonLoadBalancingStrate
      ******************************************************************************************************************/
     @Override
     public Server selectServer(List<Server> servers) {
-        Server selectedServer = servers.stream()
+        return servers.stream()
                 .filter(Server::isAlive) // Only consider servers that are alive
                 .min(Comparator.comparingInt(Server::getActiveConnections)) // Find the server with the least active connections
                 .orElseThrow(() -> new IllegalStateException("No available servers to handle the request"));
-        // Increment active connections for the selected server
-        selectedServer.setActiveConnections(selectedServer.getActiveConnections() + NumberEnum.ONE.value());
-        return selectedServer;
     }
 }
