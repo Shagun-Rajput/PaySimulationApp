@@ -8,15 +8,15 @@ import java.util.Random;
 
 @Service
 public final class RandomStrategy implements CommonLoadBalancingStrategy {
-
     private final Random random = new Random();
-
+    /*******************************************************************************************************************
+     * Selects a server from the provided list of servers using a random selection strategy.
+     *
+     * @param servers A list of available servers to choose from
+     * @return A randomly selected server from the list
+     ******************************************************************************************************************/
     @Override
     public Server selectServer(List<Server> servers) {
-        if (servers.isEmpty()) {
-            return null;
-        }
-        int index = random.nextInt(servers.size());
-        return servers.get(index);
+        return servers.get(random.nextInt(servers.size()));
     }
 }
