@@ -1,4 +1,4 @@
-package com.qbtechlabs.loadbalancer.service.impl;
+package com.qbtechlabs.loadbalancer.service.health;
 
 import com.qbtechlabs.loadbalancer.domain.Server;
 import jakarta.annotation.PostConstruct;
@@ -9,12 +9,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
 @Service
-public class HealthCheckService {
+public class ServerHealthCheck {
     private final WebClient webClient;
     private final List<Server> servers;
     @Value("${healthcheckInterval:5000}")
     private long healthCheckInterval;
-    public HealthCheckService(WebClient webClient, List<Server> servers) {
+    public ServerHealthCheck(WebClient webClient, List<Server> servers) {
         this.webClient = webClient;
         this.servers = servers;
     }

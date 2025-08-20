@@ -1,10 +1,11 @@
-package com.qbtechlabs.loadbalancer.service.impl;
+package com.qbtechlabs.loadbalancer.service;
 
 import com.qbtechlabs.loadbalancer.domain.Server;
 import com.qbtechlabs.loadbalancer.enums.NumberEnum;
 import com.qbtechlabs.loadbalancer.factory.StrategyFactory;
-import com.qbtechlabs.loadbalancer.service.LoadBalancerService;
-import jakarta.annotation.PostConstruct;
+import com.qbtechlabs.loadbalancer.util.ServerUtil;
+import org.slf4j.Logger;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,28 +14,24 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@ConfigurationProperties(prefix = "backendservers")
 public class LoadBalancerServiceImpl implements LoadBalancerService {
+    /*******************************************************************************************************************
+     * LoadBalancerServiceImpl is a service that implements the LoadBalancerService interface.
+     * It uses a StrategyFactory to select a load balancing strategy and WebClient to forward requests to selected servers.
+     ******************************************************************************************************************/
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LoadBalancerServiceImpl.class);
     private final StrategyFactory strategyFactory;
     private final WebClient webClient;
+    private final ServerUtil serverUtil;
     private final List<Server> servers;
     public LoadBalancerServiceImpl(StrategyFactory strategyFactory,
                                    WebClient.Builder webClientBuilder,
-                                   List<Server> servers) {
+                                   ServerUtil serverUtil) {
         this.strategyFactory = strategyFactory;
         this.webClient = webClientBuilder.build();
-        this.servers = servers;
-    }
-    /*******************************************************************************************************************
-     * Validates the list of servers to ensure it is not empty.
-     *
-     * This method is called after the bean is constructed to ensure that the server list is properly configured.
-     * If the server list is empty, an IllegalStateException is thrown.
-     ******************************************************************************************************************/
-    @PostConstruct
-    private void validateServers() {
-        if (servers == null || servers.isEmpty()) {
-            throw new IllegalStateException("Server list cannot be empty. Please configure servers in the application properties.");
-        }
+        this.serverUtil = serverUtil;
+        this.servers = serverUtil.getServers();
     }
     /*******************************************************************************************************************
      * Forwards the request to a selected server based on the load balancing strategy.
@@ -47,9 +44,9 @@ public class LoadBalancerServiceImpl implements LoadBalancerService {
      ******************************************************************************************************************/
     @Override
     public ResponseEntity<String> forwardRequest(String method, String requestUri, Map<String, String> headers, String body) {
-
+        logger.info("Forwarding request to servers with method: {}, URI: {}, headers: {}, body: {}, servers: [{}]", method, requestUri, headers, body, servers.stream().map(Server::getUrl).toList());
         Server selectedServer = strategyFactory.getStrategy().selectServer(servers);
-        // Increment active connections for the selected server
+        logger.info("Selected server: {}", selectedServer.getUrl());
         selectedServer.setActiveConnections(selectedServer.getActiveConnections() + NumberEnum.ONE.value());
         try {
             return prepareRequest(selectedServer, method, requestUri, headers, body)
@@ -57,7 +54,6 @@ public class LoadBalancerServiceImpl implements LoadBalancerService {
                     .toEntity(String.class)
                     .block();
         }finally {
-            // Decrement active connections after the request is completed
             selectedServer.setActiveConnections(selectedServer.getActiveConnections() - NumberEnum.ONE.value());
         }
     }

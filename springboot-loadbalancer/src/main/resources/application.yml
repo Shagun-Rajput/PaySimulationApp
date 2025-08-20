@@ -3,12 +3,13 @@ spring:
     virtual:
       enabled: true  # Enable virtual threads for better concurrency
 backendServers:
-  - url: "http://localhost:8081"
-    weight: 1
-  - url: "http://localhost:8082"
-    weight: 2
-  - url: "http://localhost:8083"
-    weight: 1
+  servers:
+    - url: "http://localhost:8081"
+      weight: 1
+    - url: "http://localhost:8082"
+      weight: 2
+    - url: "http://localhost:8083"
+      weight: 1
 
 loadBalancingStrategy: "RoundRobin"  # Options: RoundRobin, Random, WeightedRoundRobin, LeastConnections
 
