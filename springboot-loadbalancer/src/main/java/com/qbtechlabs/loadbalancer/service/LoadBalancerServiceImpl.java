@@ -5,6 +5,7 @@ import com.qbtechlabs.loadbalancer.enums.NumberEnum;
 import com.qbtechlabs.loadbalancer.factory.StrategyFactory;
 import com.qbtechlabs.loadbalancer.util.ServerUtil;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ public class LoadBalancerServiceImpl implements LoadBalancerService {
     private final WebClient webClient;
     private final ServerUtil serverUtil;
     private final List<Server> servers;
+    @Value("${liveServersProvided}")
+    private boolean liveServersProvided;
     public LoadBalancerServiceImpl(StrategyFactory strategyFactory,
                                    WebClient.Builder webClientBuilder,
                                    ServerUtil serverUtil) {
@@ -37,7 +40,8 @@ public class LoadBalancerServiceImpl implements LoadBalancerService {
      * Forwards the request to a selected server based on the load balancing strategy.
      * This method uses the strategy factory to select a server,
      * prepares the request with the specified method, URI, headers, and body,
-     * and then sends the request using WebClient.
+     * and returns the response from the server.
+     *
      * @param method      HTTP method (GET, POST, etc.)
      * @param requestUri  Request URI
      * @param headers     Request headers
@@ -49,14 +53,30 @@ public class LoadBalancerServiceImpl implements LoadBalancerService {
         logger.info("Selected server: {}", selectedServer.getUrl());
         selectedServer.setActiveConnections(selectedServer.getActiveConnections() + NumberEnum.ONE.value());
         try {
-            return prepareRequest(selectedServer, method, requestUri, headers, body)
+            return liveServersProvided ? prepareRequest(selectedServer, method, requestUri, headers, body)
                     .retrieve()
                     .toEntity(String.class)
-                    .block();
+                    .block()
+                    : requestFullfilled(method, requestUri, headers, body, selectedServer);
         }finally {
             selectedServer.setActiveConnections(selectedServer.getActiveConnections() - NumberEnum.ONE.value());
         }
     }
+    /*******************************************************************************************************************
+     * Logs the request details and returns a ResponseEntity indicating that the request was fulfilled.
+     *
+     * @param method      HTTP method (GET, POST, etc.)
+     * @param requestUri  Request URI
+     * @param headers     Request headers
+     * @param body        Request body (optional)
+     * @param selectedServer The server to which the request was forwarded
+     * @return A ResponseEntity indicating the request was fulfilled
+     ******************************************************************************************************************/
+    private ResponseEntity<String> requestFullfilled(String method, String requestUri, Map<String, String> headers, String body, Server selectedServer) {
+        logger.info("Request fulfilled with method: {}, URI: {}, headers: {}, body: {}, server: {}", method, requestUri, headers, body, selectedServer.getUrl());
+        return ResponseEntity.ok("Request forwarded to " + selectedServer.getUrl() + " with method: " + method + ", URI: " + requestUri);
+    }
+
     /*******************************************************************************************************************
      * Prepares a WebClient.RequestBodySpec for forwarding the request to the selected server.
      *

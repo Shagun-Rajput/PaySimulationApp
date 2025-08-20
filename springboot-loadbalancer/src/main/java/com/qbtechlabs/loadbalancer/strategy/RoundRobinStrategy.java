@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public final class RoundRobinStrategy implements CommonLoadBalancingStrategy {
-    private final AtomicInteger index = new AtomicInteger(0);
+    private final AtomicInteger index = new AtomicInteger(NumberEnum.ZERO.value());
     /*******************************************************************************************************************
      * Selects a server using the Round Robin load balancing strategy.
      *
