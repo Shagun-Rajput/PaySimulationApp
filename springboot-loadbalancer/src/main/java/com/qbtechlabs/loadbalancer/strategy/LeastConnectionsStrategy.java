@@ -8,6 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.qbtechlabs.loadbalancer.constant.Constants.MSG_NO_SERVER_AVL;
+
+/**
+ * @author shagun.rajput
+ */
 @Service
 public final class LeastConnectionsStrategy implements CommonLoadBalancingStrategy {
     /*******************************************************************************************************************
@@ -27,6 +32,6 @@ public final class LeastConnectionsStrategy implements CommonLoadBalancingStrate
         return servers.stream()
                 .filter(Server::isAlive) // Only consider servers that are alive
                 .min(Comparator.comparingInt(Server::getActiveConnections)) // Find the server with the least active connections
-                .orElseThrow(() -> new IllegalStateException("No available servers to handle the request"));
+                .orElseThrow(() -> new IllegalStateException(MSG_NO_SERVER_AVL));
     }
 }

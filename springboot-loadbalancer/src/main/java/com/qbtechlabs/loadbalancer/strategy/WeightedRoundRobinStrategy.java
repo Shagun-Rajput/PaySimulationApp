@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author shagun.rajput
+ */
 @Service
 public final class WeightedRoundRobinStrategy implements CommonLoadBalancingStrategy {
     private int currentIndex = NumberEnum.MINUS_ONE.value();

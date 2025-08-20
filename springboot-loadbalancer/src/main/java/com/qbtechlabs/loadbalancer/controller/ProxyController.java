@@ -1,14 +1,13 @@
 package com.qbtechlabs.loadbalancer.controller;
 
+import com.qbtechlabs.loadbalancer.enums.NumberEnum;
 import com.qbtechlabs.loadbalancer.service.LoadBalancerService;
 import com.qbtechlabs.loadbalancer.util.ProxyUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.qbtechlabs.loadbalancer.constant.Constants.TEN_LAC;
-import static com.qbtechlabs.loadbalancer.constant.Constants.URI_ALL;
+import static com.qbtechlabs.loadbalancer.constant.Constants.*;
 
 @RestController
 public class ProxyController {
@@ -19,8 +18,8 @@ public class ProxyController {
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ProxyController.class);
     private final LoadBalancerService loadBalancerService;
     private final ProxyUtil proxyUtil;
-    public ProxyController(@Lazy LoadBalancerService loadBalancerService,
-                           @Lazy ProxyUtil proxyUtil) {
+    public ProxyController(LoadBalancerService loadBalancerService,
+                           ProxyUtil proxyUtil) {
         this.loadBalancerService = loadBalancerService;
         this.proxyUtil = proxyUtil;
     }
@@ -33,10 +32,17 @@ public class ProxyController {
     @RequestMapping(value = URI_ALL, method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH, RequestMethod.OPTIONS, RequestMethod.HEAD, RequestMethod.TRACE})
     public ResponseEntity<?> handleAllRequests(@RequestBody(required = false) String body, HttpServletRequest request) {
         long startTime = System.nanoTime();
-        ResponseEntity<String> response =  loadBalancerService.forwardRequest(request.getMethod(),
-                request.getRequestURI(), proxyUtil.extractHeaders(request), body);
-        logger.info("Loadbalancer Request handled in [{}] ms",(System.nanoTime() - startTime)/ TEN_LAC);
-        return response;
+        ResponseEntity<String> response = null;
+        try {
+            response = loadBalancerService.forwardRequest(request.getMethod(),
+                    request.getRequestURI(), proxyUtil.extractHeaders(request), body);
+            logger.info(MSG_LOADBALANCER_HANDLED, (System.nanoTime() - startTime) / TEN_LAC);
+            return response;
+        }finally {
+            // Resetting startTime to zero to avoid memory leaks
+            startTime= NumberEnum.ZERO.value();
+            response =null;
+        }
     }
 
 }

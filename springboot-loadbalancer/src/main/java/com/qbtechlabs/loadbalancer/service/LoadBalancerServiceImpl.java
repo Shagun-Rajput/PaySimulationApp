@@ -1,11 +1,11 @@
 package com.qbtechlabs.loadbalancer.service;
 
+import com.qbtechlabs.loadbalancer.configuration.AppProperties;
 import com.qbtechlabs.loadbalancer.domain.Server;
 import com.qbtechlabs.loadbalancer.enums.NumberEnum;
 import com.qbtechlabs.loadbalancer.factory.StrategyFactory;
 import com.qbtechlabs.loadbalancer.util.ServerUtil;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,8 +14,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 import java.util.Map;
 
+import static com.qbtechlabs.loadbalancer.constant.Constants.*;
+
+/**
+ * @author shagun.rajput
+ */
 @Service
-@ConfigurationProperties(prefix = "backendservers")
+@ConfigurationProperties(prefix = BACKEND_SERVERS)
 public class LoadBalancerServiceImpl implements LoadBalancerService {
     /*******************************************************************************************************************
      * LoadBalancerServiceImpl is a service that implements the LoadBalancerService interface.
@@ -26,15 +31,16 @@ public class LoadBalancerServiceImpl implements LoadBalancerService {
     private final WebClient webClient;
     private final ServerUtil serverUtil;
     private final List<Server> servers;
-    @Value("${liveServersProvided}")
-    private boolean liveServersProvided;
+    private final AppProperties    appProperties;
     public LoadBalancerServiceImpl(StrategyFactory strategyFactory,
                                    WebClient.Builder webClientBuilder,
-                                   ServerUtil serverUtil) {
+                                   ServerUtil serverUtil,
+                                   AppProperties appProperties) {
         this.strategyFactory = strategyFactory;
         this.webClient = webClientBuilder.build();
         this.serverUtil = serverUtil;
         this.servers = serverUtil.getServers();
+        this.appProperties = appProperties;
     }
     /*******************************************************************************************************************
      * Forwards the request to a selected server based on the load balancing strategy.
@@ -48,12 +54,12 @@ public class LoadBalancerServiceImpl implements LoadBalancerService {
      ******************************************************************************************************************/
     @Override
     public ResponseEntity<String> forwardRequest(String method, String requestUri, Map<String, String> headers, String body) {
-        logger.info("Forwarding request to servers with method: {}, URI: {}, headers: {}, body: {}, servers: [{}]", method, requestUri, headers, body, servers.stream().map(Server::getUrl).toList());
+        logger.info(MSG_FORWARDING_REQUEST, method, requestUri, headers, body, servers.stream().map(Server::getUrl).toList());
         Server selectedServer = strategyFactory.getStrategy().selectServer(servers);
-        logger.info("Selected server: {}", selectedServer.getUrl());
+        logger.info(MSG_SELECTED_SERVER, selectedServer.getUrl());
         selectedServer.setActiveConnections(selectedServer.getActiveConnections() + NumberEnum.ONE.value());
         try {
-            return liveServersProvided ? prepareRequest(selectedServer, method, requestUri, headers, body)
+            return appProperties.getLiveServersProvided() ? prepareRequest(selectedServer, method, requestUri, headers, body)
                     .retrieve()
                     .toEntity(String.class)
                     .block()
@@ -73,8 +79,7 @@ public class LoadBalancerServiceImpl implements LoadBalancerService {
      * @return A ResponseEntity indicating the request was fulfilled
      ******************************************************************************************************************/
     private ResponseEntity<String> requestFullfilled(String method, String requestUri, Map<String, String> headers, String body, Server selectedServer) {
-        logger.info("Request fulfilled with method: {}, URI: {}, headers: {}, body: {}, server: {}", method, requestUri, headers, body, selectedServer.getUrl());
-        return ResponseEntity.ok("Request forwarded to " + selectedServer.getUrl() + " with method: " + method + ", URI: " + requestUri);
+        return ResponseEntity.ok(MSG_REQUEST_FWD_TO + selectedServer.getUrl() + MSG_WITH_METHOD + method + MSG_COMMA_URI + requestUri);
     }
 
     /*******************************************************************************************************************

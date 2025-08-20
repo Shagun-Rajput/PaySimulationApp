@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author shagun.rajput
+ */
 @Service
 public final class RoundRobinStrategy implements CommonLoadBalancingStrategy {
     private final AtomicInteger index = new AtomicInteger(NumberEnum.ZERO.value());

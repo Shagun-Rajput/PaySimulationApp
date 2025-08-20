@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author shagun.rajput
+ */
 @Service
 public final class RandomStrategy implements CommonLoadBalancingStrategy {
     private final Random random = new Random();

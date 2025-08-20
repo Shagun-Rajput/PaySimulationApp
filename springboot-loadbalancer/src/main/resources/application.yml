@@ -7,14 +7,17 @@ spring:
 liveServersProvided: false  # Indicates if live servers are provided, else false for just testing algo running
 backendServers:
   servers:
-    - url: "server-india" # Example backend server URL
+    - url: "https://server-india" # Example backend server URL
       weight: 1
-    - url: "server-us" # Example backend server URL
+    - url: "https://server-us" # Example backend server URL
       weight: 2
-    - url: "server-africa" # Example backend server URL
+    - url: "https://server-africa" # Example backend server URL
       weight: 1
 
 loadBalancingStrategy: "RoundRobin"  # Options: RoundRobin, Random, WeightedRoundRobin, LeastConnections
 
 healthCheckInterval: 5000  # Interval in milliseconds for health checks
 timeout: 2000  # Timeout in milliseconds for requests to backend servers
+logging:
+  level:
+    root: INFO  # Set the logging level for the root logger
