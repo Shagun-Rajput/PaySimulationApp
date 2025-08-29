@@ -7,7 +7,5 @@ public record VehicleRecord(
         String model,
         Double price,
         VehicleStatus status,
-        Long dealerId,
-        String dealerName,
-        String dealerEmail
+        Long dealerId
 ) {}
