@@ -1,5 +1,13 @@
 package com.app.dvm.records;
 
-public record VehicleRecord(
+import com.app.dvm.enums.VehicleStatus;
 
+public record VehicleRecord(
+        Long id,
+        String model,
+        Double price,
+        VehicleStatus status,
+        Long dealerId,
+        String dealerName,
+        String dealerEmail
 ) {}
