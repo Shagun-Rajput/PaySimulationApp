@@ -6,4 +6,5 @@ public class ApiURIs {
     public static final String VEHICLES = BASE_API + "/vehicles";
     /********************* specific operations **************************/
     public static final String BY_ID = "/{id}";
+    public static final String PREMIUM_URI = "/premium";
 }

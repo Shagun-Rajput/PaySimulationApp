@@ -1,15 +1,14 @@
 package com.app.dvm.controller;
 
+import com.app.dvm.model.ApiResponse;
 import com.app.dvm.records.DealerRecord;
 import com.app.dvm.service.DealerService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-import static com.app.dvm.constant.ApiURIs.BY_ID;
-import static com.app.dvm.constant.ApiURIs.DEALERS;
+import static com.app.dvm.constant.ApiURIs.*;
+import static com.app.dvm.constant.Constants.*;
 
 @RestController
 @RequestMapping(DEALERS)
@@ -54,29 +53,40 @@ public class DealerController {
      ******************************************************************************************************************/
     //API to Get all dealers
     @GetMapping
-    public ResponseEntity<List<DealerRecord>> getAllDealers() {
-        return ResponseEntity.ok(dealerService.getAllDealers());
+    public ResponseEntity<ApiResponse> getAllDealers() {
+        return ResponseEntity.ok(new ApiResponse(MSG_FETCHED_DEALERS_SUCCESS,
+                dealerService.getAllDealers(),
+                INT_200));
     }
     //API to Get specific dealer by ID
     @GetMapping(BY_ID)
-    public ResponseEntity<DealerRecord> getDealerById(@PathVariable Long id) {
-        return ResponseEntity.ok(dealerService.getDealerById(id));
+    public ResponseEntity<ApiResponse> getDealerById(@PathVariable Long id) {
+        return ResponseEntity.ok(new ApiResponse(MSG_FETCHED_DEALER_SUCCESS,
+                dealerService.getDealerById(id),
+                INT_200));
     }
     //API to Create a new dealer
     @PostMapping
-    public ResponseEntity<DealerRecord> createDealer(@RequestBody DealerRecord dealerRecord) {
-        return ResponseEntity.ok(dealerService.createDealer(dealerRecord));
+    public ResponseEntity<ApiResponse> createDealer(@RequestBody DealerRecord dealerRecord) {
+        return ResponseEntity.ok(new ApiResponse(MSG_CREATE_DEALER_SUCCESS,
+                dealerService.createDealer(dealerRecord),
+                INT_200));
     }
     //API to Update an existing dealer
     @PutMapping(BY_ID)
-    public ResponseEntity<DealerRecord> updateDealer(@PathVariable Long id, @RequestBody DealerRecord dealerRecord) {
-        return ResponseEntity.ok(dealerService.updateDealer(id, dealerRecord));
+    public ResponseEntity<ApiResponse> updateDealer(@PathVariable Long id,
+                                                    @RequestBody DealerRecord dealerRecord) {
+        return ResponseEntity.ok(new ApiResponse(MSG_UPDATE_DEALER_SUCCESS,
+                dealerService.updateDealer(id, dealerRecord),
+                INT_200));
     }
     //API to Delete an existing dealer
     @DeleteMapping(BY_ID)
-    public ResponseEntity<Void> deleteDealer(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> deleteDealer(@PathVariable Long id) {
         dealerService.deleteDealer(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new ApiResponse(MSG_DELETE_DEALER_SUCCESS,
+                null,
+                INT_200));
     }
     /**************************************** END *******************************************/
 }

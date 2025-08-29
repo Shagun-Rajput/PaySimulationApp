@@ -1,20 +1,22 @@
 package com.app.dvm.controller;
 
+import com.app.dvm.model.ApiResponse;
 import com.app.dvm.records.VehicleRecord;
 import com.app.dvm.service.VehicleService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-import static com.app.dvm.constant.ApiURIs.VEHICLES;
+import static com.app.dvm.constant.ApiURIs.*;
+import static com.app.dvm.constant.Constants.*;
 
 @RestController
 @RequestMapping(VEHICLES)
 public class VehicleController {
     private final VehicleService vehicleService;
     public VehicleController(@Lazy VehicleService vehicleService) {
+
         this.vehicleService = vehicleService;
     }
     /**
@@ -45,34 +47,45 @@ public class VehicleController {
      *  - Response: List of VehicleRecord objects marked as premium.
      */
     @GetMapping
-    public ResponseEntity<List<VehicleRecord>> getAllVehicles() {
-        return ResponseEntity.ok(vehicleService.getAllVehicles());
+    public ResponseEntity<ApiResponse> getAllVehicles() {
+        return ResponseEntity.ok(new ApiResponse(MSG_FETCHED_VEHICLES_SUCCESS,
+                vehicleService.getAllVehicles(),
+                INT_200));
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<VehicleRecord> getVehicleById(@PathVariable Long id) {
-        return ResponseEntity.ok(vehicleService.getVehicleById(id));
+    @GetMapping(BY_ID)
+    public ResponseEntity<ApiResponse> getVehicleById(@PathVariable Long id) {
+        return ResponseEntity.ok(new ApiResponse(MSG_FETCHED_VEHICLE_SUCCESS,
+                vehicleService.getVehicleById(id),
+                INT_200));
     }
 
     @PostMapping
-    public ResponseEntity<VehicleRecord> createVehicle(@RequestBody VehicleRecord vehicleRecord) {
-        return ResponseEntity.ok(vehicleService.createVehicle(vehicleRecord));
+    public ResponseEntity<ApiResponse> createVehicle(@RequestBody VehicleRecord vehicleRecord) {
+        return ResponseEntity.ok(new ApiResponse(MSG_CREATE_VEHICLE_SUCCESS,
+                vehicleService.createVehicle(vehicleRecord),
+                INT_200));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<VehicleRecord> updateVehicle(@PathVariable Long id, @RequestBody VehicleRecord vehicleRecord) {
-        return ResponseEntity.ok(vehicleService.updateVehicle(id, vehicleRecord));
+    @PutMapping(BY_ID)
+    public ResponseEntity<ApiResponse> updateVehicle(@PathVariable Long id, @RequestBody VehicleRecord vehicleRecord) {
+        return ResponseEntity.ok(new ApiResponse(MSG_UPDATE_VEHICLE_SUCCESS,
+                vehicleService.updateVehicle(id, vehicleRecord),
+                INT_200));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
+    @DeleteMapping(BY_ID)
+    public ResponseEntity<ApiResponse> deleteVehicle(@PathVariable Long id) {
         vehicleService.deleteVehicle(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new ApiResponse(MSG_DELETE_VEHICLE_SUCCESS,
+                null,
+                INT_200));
     }
 
-    @GetMapping("/premium")
-    public ResponseEntity<List<VehicleRecord>> getPremiumVehicles() {
-        return ResponseEntity.ok(vehicleService.getPremiumVehicles());
+    @GetMapping(PREMIUM_URI)
+    public ResponseEntity<ApiResponse> getPremiumVehicles() {
+        return ResponseEntity.ok(new ApiResponse(MSG_FETCHED_PREMIUM_VEHICLES_SUCCESS,
+                vehicleService.getPremiumVehicles(),
+                INT_200));
     }
     /**************************************** END *******************************************/
 }

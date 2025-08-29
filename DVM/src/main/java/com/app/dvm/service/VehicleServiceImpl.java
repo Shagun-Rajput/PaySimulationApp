@@ -2,6 +2,7 @@ package com.app.dvm.service;
 
 import com.app.dvm.entities.VehicleEntity;
 import com.app.dvm.enums.SubscriptionType;
+import com.app.dvm.exceptions.EntityNotFoundException;
 import com.app.dvm.records.VehicleRecord;
 import com.app.dvm.repository.VehicleRepository;
 import com.app.dvm.repository.DealerRepository;
@@ -137,7 +138,7 @@ public final class VehicleServiceImpl implements VehicleService {
                             updatedEntity.getDealerEntity().getId()
                     );
                 })
-                .orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found with ID: " + id));
     }
     /**
      * Delete a vehicle by its ID.
