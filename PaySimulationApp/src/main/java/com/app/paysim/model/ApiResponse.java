@@ -1,4 +1,4 @@
-package com.app.dvm.model;
+package com.app.paysim.model;
 
 import java.time.LocalDateTime;
 
