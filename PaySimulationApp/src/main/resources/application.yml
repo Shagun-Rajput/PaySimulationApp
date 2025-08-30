@@ -1,7 +1,7 @@
 server:
-  port: 8085  # Port on which the application will run
+  port: 8090  # Port on which the application will run
   servlet:
-    context-path: /dvm  # Base path for all endpoints
+    context-path: /paysim  # Base path for all endpoints
 logging:
   level:
     root: INFO  # Set the logging level for the root logger
