@@ -1,0 +1,21 @@
+server:
+  port: 8085  # Port on which the application will run
+  servlet:
+    context-path: /dvm  # Base path for all endpoints
+logging:
+  level:
+    root: INFO  # Set the logging level for the root logger
+spring:
+  datasource:
+    url: ${DB_HOST} # Database URL from environment variable
+    username: ${DB_USERNAME} # Database username from environment variable
+    password: ${DB_PASSWORD} # Database password from environment variable
+    driver-class-name: org.postgresql.Driver
+    validation-query: SELECT 1
+  jpa:
+    hibernate:
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate.default_schema: ${DB_SCHEMA} # Database schema from environment variable
+
