@@ -7,7 +7,10 @@ import com.app.paysim.records.PaymentRecord;
 import com.app.paysim.repository.PaymentRepository;
 import com.app.paysim.service.PaymentService;
 import com.app.paysim.specification.PaymentSpecification;
+import com.app.paysim.utility.PaymentSimulateUtil;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +19,11 @@ import java.util.List;
 @Service
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
-    public PaymentServiceImpl(@Lazy PaymentRepository paymentRepository) {
+    private final PaymentSimulateUtil paymentSimulateUtil;
+    public PaymentServiceImpl(@Lazy PaymentRepository paymentRepository,
+                              @Lazy PaymentSimulateUtil paymentSimulateUtil) {
         this.paymentRepository = paymentRepository;
+        this.paymentSimulateUtil = paymentSimulateUtil;
     }
 
     /**
@@ -25,28 +31,45 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Override
     public PaymentRecord initiatePayment(PaymentRecord paymentRecord) {
-        // Convert PaymentRecord to PaymentEntity
+        // Step-1 : Convert PaymentRecord to PaymentEntity
+        PaymentEntity paymentEntity = convertToEntity(paymentRecord);
+        // Step-2 :Save PaymentEntity to the database
+        PaymentEntity savedEntity = savePayment(paymentEntity);
+        // Step-3 :Simulate callback to update status after 5 seconds
+        paymentSimulateUtil.simulateCallback(savedEntity.getId());
+        // Step-4 :Convert saved PaymentEntity back to PaymentRecord and return
+        return convertToRecord(savedEntity);
+    }
+
+    // Convert PaymentRecord to PaymentEntity
+    private PaymentEntity convertToEntity(PaymentRecord paymentRecord) {
         PaymentEntity paymentEntity = new PaymentEntity();
         paymentEntity.setDealerId(paymentRecord.dealerId());
         paymentEntity.setAmount(paymentRecord.amount());
         paymentEntity.setMethod(paymentRecord.method());
-        paymentEntity.setStatus("PENDING");
-        // Save PaymentEntity to the database
-        PaymentEntity savedEntity = paymentRepository.save(paymentEntity);
-        // Convert saved PaymentEntity back to PaymentRecord and return
+        paymentEntity.setStatus(PaymentStatus.PENDING.value());
+        return paymentEntity;
+    }
+    // Save PaymentEntity to the database
+    private PaymentEntity savePayment(PaymentEntity paymentEntity) {
+        return paymentRepository.save(paymentEntity);
+    }
+
+    // Convert PaymentEntity to PaymentRecord
+    private PaymentRecord convertToRecord(PaymentEntity paymentEntity) {
         return new PaymentRecord(
-                savedEntity.getId(),
-                savedEntity.getDealerId(),
-                savedEntity.getAmount(),
-                savedEntity.getMethod(),
-                savedEntity.getStatus()
+                paymentEntity.getId(),
+                paymentEntity.getDealerId(),
+                paymentEntity.getAmount(),
+                paymentEntity.getMethod(),
+                paymentEntity.getStatus()
         );
     }
     /**
-     * Find Payments: Retrieves payment records based on provided filters.
+     * Find Payments with filtering and pagination.
      */
     @Override
-    public List<PaymentRecord> findPayments(PaymentRecord paymentRecord) {
+    public Page<PaymentEntity> findPayments(PaymentRecord paymentRecord, int page, int size) {
         return paymentRepository.findAll(
                         PaymentSpecification.filterByPaymentRecord(
                                 paymentRecord.paymentId(),
@@ -54,15 +77,8 @@ public class PaymentServiceImpl implements PaymentService {
                                 paymentRecord.amount(),
                                 paymentRecord.method(),
                                 paymentRecord.status()
-                        )
-                ).stream()
-                .map(entity -> new PaymentRecord(
-                        entity.getId(),
-                        entity.getDealerId(),
-                        entity.getAmount(),
-                        entity.getMethod(),
-                        entity.getStatus()
-                ))
-                .toList();
+                        ),
+                        PageRequest.of(page, size)
+                );
     }
 }
