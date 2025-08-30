@@ -6,8 +6,11 @@ import com.app.paysim.enums.PaymentStatus;
 import com.app.paysim.records.PaymentRecord;
 import com.app.paysim.repository.PaymentRepository;
 import com.app.paysim.service.PaymentService;
+import com.app.paysim.specification.PaymentSpecification;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Lazy
 @Service
@@ -38,5 +41,28 @@ public class PaymentServiceImpl implements PaymentService {
                 savedEntity.getMethod(),
                 savedEntity.getStatus()
         );
+    }
+    /**
+     * Find Payments: Retrieves payment records based on provided filters.
+     */
+    @Override
+    public List<PaymentRecord> findPayments(PaymentRecord paymentRecord) {
+        return paymentRepository.findAll(
+                        PaymentSpecification.filterByPaymentRecord(
+                                paymentRecord.paymentId(),
+                                paymentRecord.dealerId(),
+                                paymentRecord.amount(),
+                                paymentRecord.method(),
+                                paymentRecord.status()
+                        )
+                ).stream()
+                .map(entity -> new PaymentRecord(
+                        entity.getId(),
+                        entity.getDealerId(),
+                        entity.getAmount(),
+                        entity.getMethod(),
+                        entity.getStatus()
+                ))
+                .toList();
     }
 }

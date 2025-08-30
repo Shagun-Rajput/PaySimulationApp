@@ -7,4 +7,5 @@ public class Constants {
 
     /************ Messages Constants ************/
     public static final String MSG_INITIATE_PAYMENT ="Payment initiated successfully";
+    public static final String MSG_PAYMENTS_DETAILS_SUCCESS = "Payment details fetched successfully";
 }
