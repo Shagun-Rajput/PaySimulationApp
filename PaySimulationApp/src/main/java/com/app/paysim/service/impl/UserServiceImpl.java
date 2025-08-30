@@ -1,5 +1,6 @@
 package com.app.paysim.service.impl;
 
+import com.app.paysim.exceptions.InvalidTokenException;
 import com.app.paysim.records.UserRecord;
 import com.app.paysim.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
             // Return the JSON string representation of the payload
             return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonPayload);
         } catch (Exception exception) {
-            throw new RuntimeException("Error decoding JWT token", exception);
+            throw new InvalidTokenException("Error decoding JWT token");
         }
     }
 }

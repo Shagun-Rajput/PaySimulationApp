@@ -1,0 +1,100 @@
+{
+  "v": 8,
+  "name": "Payment Simulation",
+  "folders": [],
+  "requests": [
+    {
+      "v": "14",
+      "name": "Payment : Initiate payment",
+      "method": "POST",
+      "endpoint": "http://localhost:8090/paysim/api/payment/initiate",
+      "params": [],
+      "headers": [
+        {
+          "key": "auth-token",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0NTEzIiwidXNlcm5hbWUiOiJudWxsIiwiZW1haWwiOiJzaGFndW4ucmFqcHV0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzU2NTYxNjA5LCJleHAiOjE3NTY1NjIyMDl9.8HDOAi9TklmHmMCnYKu2_NKW3uvPGwSxbzz-eg-s0F4",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"dealerId\":3,\n  \"amount\":18765000.0,\n  \"method\":\"CARD\"\n}"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "14",
+      "name": "Payments : get list with filters and pagination",
+      "method": "GET",
+      "endpoint": "http://localhost:8090/paysim/api/payments",
+      "params": [
+        {
+          "key": "method",
+          "value": "CASH",
+          "active": true,
+          "description": ""
+        },
+        {
+          "key": "dealerId",
+          "value": "2",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "headers": [
+        {
+          "key": "auth-token",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0NTEzIiwidXNlcm5hbWUiOiJudWxsIiwiZW1haWwiOiJzaGFndW4ucmFqcHV0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzU2NTYxNjA5LCJleHAiOjE3NTY1NjIyMDl9.8HDOAi9TklmHmMCnYKu2_NKW3uvPGwSxbzz-eg-s0F4",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "14",
+      "name": "Payment : User Token generation",
+      "method": "POST",
+      "endpoint": "http://localhost:8090/paysim/api/user-auth-token",
+      "params": [],
+      "headers": [],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"userId\":4513,\n  \"userName\":\"shagun.rajput\",\n  \"email\":\"shagun.rajput@example.com\"\n}"
+      },
+      "requestVariables": [],
+      "responses": {}
+    }
+  ],
+  "auth": {
+    "authType": "inherit",
+    "authActive": true
+  },
+  "headers": [],
+  "_ref_id": "coll_mextpf4t_81e26aaf-bde1-41e7-8916-bed9aad5ad26"
+}

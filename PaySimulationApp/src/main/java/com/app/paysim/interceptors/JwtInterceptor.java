@@ -1,5 +1,6 @@
 package com.app.paysim.interceptors;
 
+import com.app.paysim.exceptions.InvalidTokenException;
 import com.app.paysim.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,9 +27,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         String authHeader = request.getHeader("auth-token");
         if (authHeader == null || authHeader.isEmpty()) {
             logger.warn("Missing auth-token header");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Missing auth-token.......");
-            return false;
+            throw new InvalidTokenException("Missing auth-token header.....");
         }
         try {
             // Validate and decode the token
@@ -38,9 +37,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             request.setAttribute("claims", claims);
             logger.info("JWT token validated successfully, claims set in request attributes");
         } catch (Exception exception) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid or expired JWT token");
-            return false;
+            throw new InvalidTokenException("Invalid or expired auth-token");
         }
         return true;
     }

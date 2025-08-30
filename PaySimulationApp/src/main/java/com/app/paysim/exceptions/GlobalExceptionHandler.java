@@ -2,6 +2,7 @@ package com.app.dvm.exceptions;
 
 import com.app.paysim.exceptions.EntityNotFoundException;
 import com.app.paysim.exceptions.InvalidInputException;
+import com.app.paysim.exceptions.InvalidTokenException;
 import com.app.paysim.model.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,8 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import static com.app.paysim.constant.Constants.INT_400;
-import static com.app.paysim.constant.Constants.INT_500;
+import static com.app.paysim.constant.Constants.*;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,5 +34,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handleGlobalException(Exception ex, WebRequest request) {
         ApiResponse errorResponse = new ApiResponse("An unexpected error occurred", request.getDescription(false), INT_500, null);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ApiResponse> handleInvalidTokenException(InvalidTokenException ex, WebRequest request) {
+        ApiResponse errorResponse = new ApiResponse(ex.getMessage(), request.getDescription(false), INT_401, null);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 }

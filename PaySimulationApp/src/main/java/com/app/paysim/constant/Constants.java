@@ -3,6 +3,7 @@ package com.app.paysim.constant;
 public class Constants {
     public static final int INT_200 = 200;
     public static final int INT_400 = 400;
+    public static final int INT_401 = 401;
     public static final int INT_500 = 500;
 
     /************ Messages Constants ************/
