@@ -8,7 +8,7 @@ import java.util.List;
 
 @Lazy
 @Service
-public sealed interface DealerService permits DealerServiceImpl {
+public interface DealerService {
     //*****************************CRUD Operations for Dealer Entity***************************/
     List<DealerRecord> getAllDealers();
     DealerRecord getDealerById(Long id);

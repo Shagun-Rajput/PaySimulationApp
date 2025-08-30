@@ -4,9 +4,13 @@ package com.app.dvm.entities;
 import com.app.dvm.enums.SubscriptionType;
 import com.app.dvm.records.DealerRecord;
 import jakarta.persistence.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "dealers")
+@DynamicUpdate
+@DynamicInsert
 public class DealerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

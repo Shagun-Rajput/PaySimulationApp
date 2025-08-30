@@ -1,4 +1,4 @@
-package com.app.dvm.service;
+package com.app.dvm.service.impl;
 
 import com.app.dvm.entities.VehicleEntity;
 import com.app.dvm.enums.SubscriptionType;
@@ -6,6 +6,7 @@ import com.app.dvm.exceptions.EntityNotFoundException;
 import com.app.dvm.records.VehicleRecord;
 import com.app.dvm.repository.VehicleRepository;
 import com.app.dvm.repository.DealerRepository;
+import com.app.dvm.service.VehicleService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Lazy
 @Service
-public final class VehicleServiceImpl implements VehicleService {
+public class VehicleServiceImpl implements VehicleService {
     /**
      * CRUD Operations for Vehicle Entity.
      */

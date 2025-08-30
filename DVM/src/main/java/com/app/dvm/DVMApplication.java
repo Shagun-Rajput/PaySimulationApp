@@ -10,7 +10,8 @@ public class DVMApplication {
     public static void main(String[] args) {
         SpringApplication.run(DVMApplication.class, args);
         logger.info("********************************************************************");
-        logger.info("**************** Load Balancer started successfully ****************");
+        logger.info("**************** DVM Application started successfully **************");
+        logger.info("Access Swagger UI at: http://localhost:8085/dvm/swagger-ui.html");
         logger.info("********************************************************************");
     }
 }

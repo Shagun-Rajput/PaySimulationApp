@@ -1,8 +1,9 @@
-package com.app.dvm.service;
+package com.app.dvm.service.impl;
 
 
 import com.app.dvm.records.DealerRecord;
 import com.app.dvm.repository.DealerRepository;
+import com.app.dvm.service.DealerService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Lazy
 @Service
-public final class DealerServiceImpl implements DealerService{
+public class DealerServiceImpl implements DealerService {
     /**
      * Dependency Injection of DealerRepository to interact with the data layer.
      * The repository is marked as @Lazy to prevent circular dependency issues.

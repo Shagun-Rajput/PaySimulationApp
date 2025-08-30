@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Lazy
 @Service
-public sealed interface VehicleService permits VehicleServiceImpl {
+public interface VehicleService{
     //*****************************CRUD Operations for Vehicle Entity***************************/
     List<com.app.dvm.records.VehicleRecord> getAllVehicles();
     com.app.dvm.records.VehicleRecord getVehicleById(Long id);
