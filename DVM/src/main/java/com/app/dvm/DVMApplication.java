@@ -11,7 +11,6 @@ public class DVMApplication {
         SpringApplication.run(DVMApplication.class, args);
         logger.info("********************************************************************");
         logger.info("**************** DVM Application started successfully **************");
-        logger.info("Access Swagger UI at: http://localhost:8085/dvm/swagger-ui.html");
         logger.info("********************************************************************");
     }
 }

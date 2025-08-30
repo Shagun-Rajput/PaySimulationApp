@@ -17,6 +17,7 @@
 
     <properties>
         <java.version>21</java.version>
+        <postgresql.version>42.7.7</postgresql.version>
     </properties>
 
     <dependencies>
@@ -25,24 +26,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <!-- Spring Boot JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
-        <!-- PostgreSQL -->
+        <!-- PostgreSQL : For DB connection -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.7</version>
-        </dependency>
-        <!-- Swagger for API documentation -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.2.0</version>
+            <version>${postgresql.version}</version>
         </dependency>
     </dependencies>
     <build>
