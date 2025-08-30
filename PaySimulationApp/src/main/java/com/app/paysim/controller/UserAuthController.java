@@ -38,4 +38,8 @@ public class UserAuthController {
                 null));
 
     }
+    /**
+     * User registration endpoint.
+     * - This endpoint allows new users to register by providing their details.
+     */
 }
