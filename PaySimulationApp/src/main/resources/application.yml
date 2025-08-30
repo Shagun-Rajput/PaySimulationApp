@@ -18,4 +18,11 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate.default_schema: ${DB_SCHEMA} # Database schema from environment variable
-
+app:
+  simulation:
+    default-delay: 5000  # Default delay for simulations in milliseconds
+  jwt:
+    secret:
+      key: app-jwt-secret-key  # Secret key for JWT authentication and signature management
+    expiration:
+      minutes: 10  # JWT token expiration time in minutes

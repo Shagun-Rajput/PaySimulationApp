@@ -1,4 +1,4 @@
-package com.app.dvm.exceptions;
+package com.app.paysim.exceptions;
 
 public class EntityNotFoundException extends RuntimeException{
     public EntityNotFoundException(String message) {

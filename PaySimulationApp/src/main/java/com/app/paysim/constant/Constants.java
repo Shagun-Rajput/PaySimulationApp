@@ -8,4 +8,5 @@ public class Constants {
     /************ Messages Constants ************/
     public static final String MSG_INITIATE_PAYMENT ="Payment initiated successfully";
     public static final String MSG_PAYMENTS_DETAILS_SUCCESS = "Payment details fetched successfully";
+    public static final String MSG_USER_AUTH_TOKEN_SUCCESS = "User authentication token generated successfully";
 }
